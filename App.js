@@ -1,42 +1,52 @@
-import React, {useState} from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  FlatList, 
-} from 'react-native';
+import _ from 'lodash';
+import React, { Component } from 'react';
+import { AsyncStorage } from 'react-native';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
+import MainScreen from './screens/MainScreen';
+import WelcomeScreen from './screens/WelcomeScreen';
+// console.reportErrorsAsExceptions = false;
+// import Users from './components/Users'
+import { Provider } from 'react-redux';
+import { AppLoading } from 'expo';
+import store from './store';
 
-import ExpenseItem from './components/ExpenseItem';
-import ExpenseInput from './components/ExpenseInput';
+// apollo client setup
 
-export default function App() {
+const client = new ApolloClient({
+  uri: 'https://mycomplex.herokuapp.com'
+});
 
-  
-  const [expenses, setExpnses] = useState([]);
+class App extends Component {
+  state = {
+    token: null
+  };
 
-  const addExpenseHandler = (expenseTitle) =>{
-   setExpnses(currentExpense =>[...expenses, {id: Math.random().toString(), value: expenseTitle}])
+  async componentDidMount() {
+    let token = await AsyncStorage.getItem('fb_token');
+    if (token) {
+      this.setState({ token });
+    } else {
+      this.setState({ token: false });
+    }
   }
 
-  const removeExpenseHandler = expenseId =>{
-    setExpnses(currentExpense =>{
-      return currentExpense.filter((expense)=>expense.id !==expenseId)
-    })
+  render() {
+    if (_.isNull(this.state.token)) {
+      return <AppLoading />;
+    }
+
+    let runThisScreen = <WelcomeScreen />;
+    if (this.state.token) {
+      runThisScreen = <MainScreen />;
+    }
+
+    return (
+      <ApolloProvider client={client}>
+        <Provider store={store}>{runThisScreen}</Provider>
+      </ApolloProvider>
+    );
   }
-  
-  return (
-    <View style={styles.screen}>
-      <ExpenseInput onAddExpense= {addExpenseHandler}/>
-      <FlatList
-      keyExtractor={(item, index) => item.id}
-       data={expenses} renderItem={itemData => <ExpenseItem id={itemData.item.id} onDelete={removeExpenseHandler.bind(this, itemData.item.id)} title={itemData.item.value}/>} 
-          />
-    </View>
-  );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    padding:50
-  },
-});
+export default App;
