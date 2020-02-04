@@ -4,13 +4,23 @@ import { graphql } from 'react-apollo';
 import {
   View,
   FlatList,
-  Text,
-  ScrollView,
-  TextInput,
-  Button,
   StyleSheet,
+  Image,
   TouchableOpacity
 } from 'react-native';
+import {
+  Container,
+  Header,
+  Content,
+  Card,
+  CardItem,
+  Thumbnail,
+  Text,
+  Button,
+  Icon,
+  Left,
+  Body
+} from 'native-base';
 
 class Users extends Component {
   // state = {
@@ -23,32 +33,65 @@ class Users extends Component {
       return <Text> loading please wait ...</Text>;
     } else {
       return (
-        <TouchableOpacity>
-          {this.props.data.allUsers.map((user, index) => (
-            <Text key={index} style={styles.item}>
-              {user.names}
-            </Text>
-          ))}
-        </TouchableOpacity>
+        <View>
+          {this.props.data.allUsers.map((u, i) => {
+            return (
+              <View key={i}>
+                <CardItem style={styles.item}>
+                  <Image
+                    source={{
+                      uri:
+                        'https://res.cloudinary.com/dfsai53mw/image/upload/v1579784519/qgohukxg4ikggnaecksa.jpg'
+                    }}
+                    style={{
+                      height: 50,
+                      width: 50,
+                      marginRight: 5,
+                      borderRadius: 40
+                    }}
+                  />
+                  <Text style={styles.name}>
+                    {u.names} {'\n'}
+                    <Text style={styles.email}>{u.email}</Text>
+                  </Text>
+                </CardItem>
+              </View>
+            );
+          })}
+        </View>
       );
     }
   };
 
   render() {
-    return <View style={styles.container}>{this.displayUsers()}</View>;
+    return (
+      <Container>
+        <Header title='Users' />
+        <Content>
+          <Card style={{ flex: 0 }}>{this.displayUsers()}</Card>
+        </Content>
+      </Container>
+    );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#f5fffa'
+  // container: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   backgroundColor: '#f5ff',
+  //   marginLeft: 8
+  // },
+  name: {
+    fontSize: 14
+  },
+  email: {
+    fontSize: 11
   },
   item: {
-    padding: 10,
-    marginVertical: 10,
-    backgroundColor: '#ccc',
-    borderColor: 'black',
-    borderWidth: 1
+    backgroundColor: '#d6d7da',
+    textAlign: 'center',
+    margin: 5
   }
 });
 

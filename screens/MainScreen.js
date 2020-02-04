@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, AsyncStorage } from 'react-native';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -6,7 +6,8 @@ import { createMaterialBottomTabNavigator } from 'react-navigation-material-bott
 import Icon from 'react-native-vector-icons/Ionicons';
 import Users from '../components/Users';
 import MainExpense from './MainExpense';
-class HomeScreen extends React.Component {
+import MapScreen from './MapScreen';
+class HomeScreen extends Component {
   async componentDidMount() {
     let token = await AsyncStorage.getItem('fb_token');
     if (token) {
@@ -24,6 +25,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Text>Home Screen</Text>
+        <MainExpense />
         <Button onPress={this.clearAuthentication} title='Log out'></Button>
       </View>
     );
@@ -31,22 +33,12 @@ class HomeScreen extends React.Component {
 }
 class UserScreen extends React.Component {
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>User Screen</Text>
-        <Users />
-      </View>
-    );
+    return <Users />;
   }
 }
 class ImageScreen extends React.Component {
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>Image Screen</Text>
-        <MainExpense />
-      </View>
-    );
+    return <MapScreen />;
   }
 }
 
