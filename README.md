@@ -1,2 +1,2 @@
-# Expenses-tracker
-## Expenses-tracker is a mobile application build in React Native.
+# React-native-Staff-with-Expo
+## React-native-Staff-with-Expo is for learning React-native staff
